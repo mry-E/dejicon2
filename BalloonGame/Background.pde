@@ -3,7 +3,7 @@ class Background {
   float x =0, speed = 1;
 
   Background() {
-    img = loadImage("sora2.jpg");
+    img = loadImage("image/sora.png");
   }
 
   void display() {

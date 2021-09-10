@@ -1,11 +1,16 @@
 class Screen {
   int start=-1;
   int difflevel;
+  PImage img,img2,img3;
   Screen() {
+    PFont font = createFont("Meiryo",50);
+    textFont(font);
+    img = loadImage("image/sora.png");
+    img2 = loadImage("image/gameover.png");
+    img3 = loadImage("image/clear.jpg");
   }
 
   void Start() {
-    img = loadImage("sora2.jpg");
     background(0);
     x -= speed;
     image(img, x, 0);
@@ -20,11 +25,10 @@ class Screen {
     textAlign(CENTER);
     text("「風の船」", width/2, 300);
     text("少年の大切な風船は飛んでしまった.....", width/2, height/2);
-    text("Sを押してね",width*2/3,height*2/3);
   }
 
   void End() {
-    img2 = loadImage("gameover.png");
+    
     background(255);
     image(img2,0,0);
     
@@ -37,7 +41,7 @@ class Screen {
   }
   
   void Clear() {
-    img3 = loadImage("clear.jpg");
+    
     img3.resize(width,height);
     background(img3);
     fill(255);

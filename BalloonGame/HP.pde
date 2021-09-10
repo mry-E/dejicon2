@@ -3,7 +3,7 @@ class HP{
   float hpGage;
   HP(){
     x = 50;
-    y = 100;
+    y = 50;
     len = 300;
     val = 50;
     hpGage = len;

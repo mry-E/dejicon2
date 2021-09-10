@@ -4,7 +4,7 @@ int scene = 1;
 float x =0, speed = 0.8;
 float rMax = 200;
 PImage img;
-int count = 0;
+int delayCount = 0;
 Balloon b;
 HP h;
 Background back;
@@ -94,8 +94,8 @@ void balloonGameOver() {
   if (b.r > rMax) {
     image(img, b.x-b.r/2, b.y-b.r/2, 200, 200);
     b.isOverHeel = true;
-    count += 1;
-    if(count == 60){
+    delayCount += 1;
+    if(delayCount == 60){
       scene = 2;
     }
   }

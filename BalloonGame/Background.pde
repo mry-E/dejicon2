@@ -3,7 +3,8 @@ class Background {
   float x =0, speed = 1;
 
   Background() {
-    img = loadImage("image/sora.png");
+    img = loadImage("image/sora_Loop.jpg");
+    img.resize(width,height);
   }
 
   void display() {
@@ -11,7 +12,7 @@ class Background {
     image(img, x, 0);
     if (x<0) {
       for (int i=0; i<30; i++) {
-        image(img, x+1000*i, 0);
+        image(img, x+width*i, 0);
       }
     }
     //saveFrame("frames/######.png");

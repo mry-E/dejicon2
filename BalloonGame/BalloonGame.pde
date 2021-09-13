@@ -1,10 +1,11 @@
-Screen s;
-
 int scene = 1;
-float x =0, speed = 0.8;
+
 float rMax = 200;
+float rMin = 50;
 PImage img;
 int delayCount = 0;
+
+Screen s;
 Balloon b;
 HP h;
 Background back;
@@ -12,15 +13,15 @@ Heel []heelOb = new Heel[5];
 Cloud []cloudOb = new Cloud[5];
 
 void setup() {
-  size(1200, 800);
+  size(1600, 800);
   img  = loadImage("image/haretu.png");
   s = new Screen();
-  b = new Balloon(width/8, height/2, rMax);
+  b = new Balloon(width/6, height/2, rMax);
   h = new HP();
   back = new Background();
   for (int i = 0; i < 5; i++) {
-    heelOb[i] = new Heel(random(width/2, width*3/4)*(i+1), random(125, height-125));
-    cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 300), random(50, 300));
+    heelOb[i] = new Heel(random(width/2, width*3/4)*(i+2), random(125, height-125),random(1,3));
+    cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200),random(1,3));
   }
 }
 
@@ -95,14 +96,17 @@ void balloonGameOver() {
     image(img, b.x-b.r/2, b.y-b.r/2, 200, 200);
     b.isOverHeel = true;
     delayCount += 1;
-    if(delayCount == 60){
+    if (delayCount == 60) {
       scene = 2;
     }
+  }
+  if((b.r-rMin)/(rMax-rMin) < 0){
+    scene = 2;
   }
 }
 
 void InHPgage() {
-  h.update(b.r/200);
+  h.update((b.r-rMin)/(rMax-rMin));
   h.display();
 }
 
@@ -131,6 +135,13 @@ void keyPressed() {
   }
 
   if (key == 'r' && scene != 1) {
+    b = new Balloon(width/8, height/2, rMax);
+    h = new HP();
+    back = new Background();
+    for (int i = 0; i < 5; i++) {
+      heelOb[i] = new Heel(random(width/2, width*3/4)*(i+1), random(125, height-125),random(1,3));
+      cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 300), random(50, 300),random(1,3));
+    }
     scene = 1;
   }
   if (key == 's' && scene == 1) {
@@ -140,6 +151,6 @@ void keyPressed() {
 
 void keyReleased() {
   if (keyCode == RIGHT) {
-    b.move(100, 0, 100);
+    b.move(100, 0, 50);
   }
 }

@@ -1,13 +1,18 @@
 class Screen {
   int start=-1;
   int difflevel;
+  float speed = 1;
+  float x = 0;
   PImage img,img2,img3;
   Screen() {
     PFont font = createFont("Meiryo",50);
     textFont(font);
-    img = loadImage("image/sora.png");
+    img = loadImage("image/sora_Loop.png");
     img2 = loadImage("image/gameover.png");
     img3 = loadImage("image/clear.jpg");
+    img.resize(width,height);
+    img2.resize(width,height);
+    
   }
 
   void Start() {
@@ -16,7 +21,7 @@ class Screen {
     image(img, x, 0);
     if (x<5) {
       for (int i=0; i<30; i++) {
-        image(img, x+1000*i, 0);
+        image(img, x+width*i, 0);
       }
     }
     //saveFrame("frames/######.png");
@@ -30,7 +35,7 @@ class Screen {
   void End() {
     
     background(255);
-    image(img2,0,0);
+    image(img2,x+20,0);
     
     fill(0);
     textSize(32);

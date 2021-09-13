@@ -2,12 +2,13 @@ class Balloon {
   float x, y, r, maxR;
   float angle;
   float sizeY = 0.0;
-  float sizeStepY = 0.1;
+  float sizeStepY = 0.5;
   boolean isOverHeel = false;
   Balloon(float x1, float y1, float r1) {
     x = x1;
     y = y1;
     r = r1;
+    maxR = 300;
     angle = 0;
   }
 
@@ -23,14 +24,16 @@ class Balloon {
   }
 
   void update() {
-    angle += 0.06;
-    sizeY = sin(angle)*10;
-    if (r > maxR/2) {
-      y -= sizeStepY;
-    } else {
-      y += sizeStepY;
+    if (!isOverHeel) {
+      angle += 0.06;
+      sizeY = sin(angle)*10;
+      if (r > maxR/2) {
+        y -= sizeStepY;
+      } else {
+        y += sizeStepY;
+      }
+      r -= 0.1;
     }
-    r -= 0.1;
   }
 
   void move(float stepX, float stepY, float stepR) {

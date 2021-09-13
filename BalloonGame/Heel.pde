@@ -1,12 +1,13 @@
 class Heel {
-  float x, y, r;
+  float x, y, r,speed;
   PImage img;
   boolean isAtack = false;
   boolean isHeel = false;
-  Heel(float x1,float y1) {
+  Heel(float x1,float y1,float speed1) {
     x = x1;
     y = y1;
     r = 100;
+    speed = speed1;
     img = loadImage("image/kuukiire.png");
   }
 
@@ -18,7 +19,7 @@ class Heel {
   }
 
   void move() {
-    x += -1;
+    x -= speed;
   }
   
   void isAtackJudge(float bx,float by,float br){

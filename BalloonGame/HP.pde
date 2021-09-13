@@ -2,9 +2,9 @@ class HP{
   float x,y,len,val;
   float hpGage;
   HP(){
-    x = 50;
-    y = 50;
-    len = 300;
+    x = width/16;
+    y = height/16;
+    len = 400;
     val = 50;
     hpGage = len;
   }

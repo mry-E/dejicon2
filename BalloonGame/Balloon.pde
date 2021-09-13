@@ -43,10 +43,6 @@ class Balloon {
   }
 
   void airVolIn() {
-    r += 50;
-  }
-
-  void balloonBreak() {
-    r = 0;
+    r += 20;
   }
 }

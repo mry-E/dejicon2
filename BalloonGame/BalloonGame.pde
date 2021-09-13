@@ -7,14 +7,17 @@ PImage img;
 int delayCount = 0;
 boolean gameover = false;
 int scoreCount = 0;
+int HPCnt = 10;
+int CloudCnt = 5;
+int ToriCnt = 5;
 
 Screen screen;
 Balloon balloon;
 HP hp;
 Background back;
-Heel []heelOb = new Heel[5];
-Cloud []cloudOb = new Cloud[5];
-Tori []toriOb = new Tori[5];
+Heel []heelOb = new Heel[HPCnt];
+Cloud []cloudOb = new Cloud[CloudCnt];
+Tori []toriOb = new Tori[ToriCnt];
 Goal g;
 Button button, expButton, returnButton;
 
@@ -47,8 +50,13 @@ void callClass() {
   hp = new HP();
   back = new Background();
   g = new Goal();
-  for (int i = 0; i < 5; i++) {
-    heelOb[i] = new Heel(random(width/2, width*3/4)*(i+2), random(125, height-125), random(1, 3));
+  float hpX = width*6/8;
+  for (int i = 0;i < HPCnt; i++){
+    heelOb[i] = new Heel(hpX, random(125, height-125), random(1, 3));
+    hpX += width*3/8;
+  }
+  
+  for (int i = 0; i < ToriCnt; i++) {
     cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200), random(1, 3));
     toriX = random(width/2, width*3/4)*(i+2);
     toriY = random(125, height-300);
@@ -104,7 +112,13 @@ void InBackground() {
 void InBalloon() {
   balloon.update((balloon.r-rMin)/(rMax-rMin));
   balloon.display();
-  for (int i = 0; i < 5; i++) {
+  for(int i = 0;i < HPCnt;i++){
+    if (heelOb[i].isHeel) {
+      balloon.airVolIn();
+      heelOb[i].isHeel = false;
+    }
+  }
+  for (int i = 0; i < CloudCnt; i++) {
     if (cloudOb[i].isBound == 1) {
       balloon.move(-50, 0, 0);
       cloudOb[i].isBound = 0;
@@ -115,10 +129,7 @@ void InBalloon() {
       balloon.move(0, -50, 0);
       cloudOb[i].isBound = 0;
     }
-    if (heelOb[i].isHeel) {
-      balloon.airVolIn();
-      heelOb[i].isHeel = false;
-    }
+    
     if (toriOb[i].isTori) {
       gameover = true;
       toriOb[i].isTori = false;
@@ -131,7 +142,7 @@ void InBalloon() {
 }
 
 void balloonGameMove() {
-  if (balloon.x - balloon.r/2 < 0) {
+  if (balloon.x - balloon.r/2 < 0 || balloon.y < 0 || balloon.y > height) {
     scene = 2;
   }
   if (balloon.r > rMax || gameover) {
@@ -156,7 +167,7 @@ void InHPgage() {
 }
 
 void InHeel() {
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < HPCnt; i++) {
     heelOb[i].display();
     heelOb[i].move();
     heelOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r);
@@ -164,7 +175,7 @@ void InHeel() {
 }
 
 void InCloud() {
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < CloudCnt; i++) {
     cloudOb[i].display();
     cloudOb[i].update();
     cloudOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r);
@@ -172,7 +183,7 @@ void InCloud() {
 }
 
 void InTori() {
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < ToriCnt; i++) {
     toriOb[i].display();
     toriOb[i].update();
     toriOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r/2);
@@ -189,16 +200,16 @@ void InCount() {
 }
 
 void keyPressed() {
-  if (keyCode == UP) {
+  if (keyCode == UP && !balloon.isOverHeel) {
     balloon.move(0, -10, 0);
   }
-  if (keyCode == DOWN) {
+  if (keyCode == DOWN && !balloon.isOverHeel) {
     balloon.move(0, 10, 0);
   }
 }
 
 void keyReleased() {
-  if (keyCode == RIGHT) {
-    balloon.move(100, 0, 50);
+  if (keyCode == RIGHT && !balloon.isOverHeel) {
+    balloon.move(100, 0, 30);
   }
 }

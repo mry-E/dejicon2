@@ -34,6 +34,14 @@ class Screen {
     text("「風の船」", width/2, 300);
     text("少年の大切な風船は飛んでしまった.....", width/2, height/2);
     
+    text("↑",width*1/5,height*5/7);
+    text("→",width*2/7,height*7/9);
+    text("↓",width*1/5,height*6/7);
+    textSize(24);
+    text("風船が上に移動",width*1/5,height*4/6);
+    text("風船内の空気を使い右に移動",width*3/8,height*5/6);
+    text("風船が下に移動",width*1/5,height*9/10);
+    
   }
 
   void End() {    

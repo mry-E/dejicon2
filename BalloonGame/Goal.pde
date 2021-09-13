@@ -8,7 +8,7 @@ class Goal {
     y1 = height;
     x2 = width;
     y2 = 0;
-    img5 = loadImage("image/sora_sss.png");
+    img5 = loadImage("image/balloon_boy.png");
     img5.resize(img5.width*3/9, img5.height*3/9);
   }
   void display() {
@@ -17,7 +17,7 @@ class Goal {
     x1 -= 1;
     x2 -= 1;
     
-    image(img5, x1, height/2);
+    image(img5, x1, height/3);
     //img4 = loadImage("");
     //img.resize(size,size);
     //image(img4, x, y, size, size);

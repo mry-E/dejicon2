@@ -43,6 +43,6 @@ class Balloon {
   }
 
   void airVolIn() {
-    r += 20;
+    r += 25;
   }
 }

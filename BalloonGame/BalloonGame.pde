@@ -19,7 +19,8 @@ Heel []heelOb = new Heel[HPCnt];
 Cloud []cloudOb = new Cloud[CloudCnt];
 Tori []toriOb = new Tori[ToriCnt];
 Goal g;
-Button button, expButton, returnButton;
+Button button, expButton, returnButton,returnExpButton;
+Explain exp;
 
 void setup() {
   size(1200, 800);
@@ -41,6 +42,9 @@ void draw() {
   case 4:
     Game();
     break;
+  case 5:
+    Explain();
+    break;
   }
 }
 
@@ -57,7 +61,7 @@ void callClass() {
   }
   
   for (int i = 0;i < CloudCnt;i++){
-    cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200), random(1, 3));
+    cloudOb[i] = new Cloud(random(width/2, width*5/8)*(i+1), random(125, height-300), random(50, 200), random(50, 200), random(1, 3));
   }
   
   for (int i = 0; i < ToriCnt; i++) {
@@ -66,8 +70,11 @@ void callClass() {
     toriOb[i] = new Tori(toriX, toriY, toriX-40, toriY+20, toriX, toriY+40, random(1, 3));
   }
   button=new Button(width/2, height/2, 200, 100, "START!");
-  returnButton = new Button(width/2, height/2, 200, 100, "RETURN");
+  returnButton = new Button(width/2, height/2, 200, 100, "戻る");
+  expButton = new Button(width/2, height*2/3, 200, 100, "遊び方");
+  returnExpButton = new Button(width*5/6,height*5/6-30,150,75,"戻る");
   scoreCount = 0;
+  exp = new Explain();
 }
 void Start() {
   screen.Start();
@@ -75,6 +82,11 @@ void Start() {
     button.run();
   } else {
     scene = 4;
+  }
+  if(!expButton.isPush()){
+    expButton.run();
+  }else{
+    scene = 5;
   }
 }
 
@@ -123,13 +135,13 @@ void InBalloon() {
   }
   for (int i = 0; i < CloudCnt; i++) {
     if (cloudOb[i].isBound == 1) {
-      balloon.move(-50, 0, 0);
+      balloon.move(-80, 0, 0);
       cloudOb[i].isBound = 0;
     } else if (cloudOb[i].isBound == 2) {
-      balloon.move(0, 50, 0);
+      balloon.move(0, 80, 0);
       cloudOb[i].isBound = 0;
     } else if (cloudOb[i].isBound == 3) {
-      balloon.move(0, -50, 0);
+      balloon.move(0, -80, 0);
       cloudOb[i].isBound = 0;
     }
   }
@@ -205,6 +217,15 @@ void InCount() {
   }
 }
 
+void Explain(){
+  exp.display();
+  if (!returnExpButton.isPush()) {
+    returnExpButton.run();
+  } else {
+    scene = 1;
+  }
+}
+
 void keyPressed() {
   if (keyCode == UP && !balloon.isOverHeel) {
     balloon.move(0, -10, 0);
@@ -216,6 +237,6 @@ void keyPressed() {
 
 void keyReleased() {
   if (keyCode == RIGHT && !balloon.isOverHeel) {
-    balloon.move(100, 0, 20);
+    balloon.move(20, 0, 10);
   }
 }

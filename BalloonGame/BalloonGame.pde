@@ -1,28 +1,27 @@
 int scene = 1;
 
+float toriX, toriY;
 float rMax = 200;
 float rMin = 50;
 PImage img;
 int delayCount = 0;
+boolean gameover = false;
+int scoreCount = 0;
 
-Screen s;
-Balloon b;
-HP h;
+Screen screen;
+Balloon balloon;
+HP hp;
 Background back;
 Heel []heelOb = new Heel[5];
 Cloud []cloudOb = new Cloud[5];
+Tori []toriOb = new Tori[5];
+Goal g;
+Button button, expButton, returnButton;
 
 void setup() {
-  size(1600, 800);
+  size(1200, 800);
   img  = loadImage("image/haretu.png");
-  s = new Screen();
-  b = new Balloon(width/6, height/2, rMax);
-  h = new HP();
-  back = new Background();
-  for (int i = 0; i < 5; i++) {
-    heelOb[i] = new Heel(random(width/2, width*3/4)*(i+2), random(125, height-125),random(1,3));
-    cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200),random(1,3));
-  }
+  callClass();
 }
 
 void draw() {
@@ -42,16 +41,50 @@ void draw() {
   }
 }
 
+void callClass() {
+  screen = new Screen();
+  balloon = new Balloon(width/6, height/2, rMax);
+  hp = new HP();
+  back = new Background();
+  g = new Goal();
+  for (int i = 0; i < 5; i++) {
+    heelOb[i] = new Heel(random(width/2, width*3/4)*(i+2), random(125, height-125), random(1, 3));
+    cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200), random(1, 3));
+    toriX = random(width/2, width*3/4)*(i+2);
+    toriY = random(125, height-300);
+    toriOb[i] = new Tori(toriX, toriY, toriX-40, toriY+20, toriX, toriY+40, random(1, 3));
+  }
+  button=new Button(width/2, height/2, 200, 100, "START!");
+  returnButton = new Button(width/2, height/2, 200, 100, "RETURN");
+  scoreCount = 0;
+}
 void Start() {
-  s.Start();
+  screen.Start();
+  if (!button.isPush()) {
+    button.run();
+  } else {
+    scene = 4;
+  }
 }
 
 void Gameover() {
-  s.End();
+  screen.End();
+  if (!returnButton.isPush()) {
+    returnButton.run();
+  } else {
+    callClass();
+    scene = 1;
+  }
 }
 
 void Clear() {
-  s.Clear();
+  screen.Clear();
+  if (!returnButton.isPush()) {
+    returnButton.run();
+  } else {
+    callClass();
+    scene = 1;
+  }
 }
 
 void Game() {
@@ -60,6 +93,8 @@ void Game() {
   InHPgage();
   InHeel();
   InCloud();
+  InTori();
+  InCount();
 }
 
 void InBackground() {
@@ -67,54 +102,64 @@ void InBackground() {
 }
 
 void InBalloon() {
-  b.update();
-  b.display();
+  balloon.update((balloon.r-rMin)/(rMax-rMin));
+  balloon.display();
   for (int i = 0; i < 5; i++) {
     if (cloudOb[i].isBound == 1) {
-      b.move(-50, 0, 0);
+      balloon.move(-50, 0, 0);
       cloudOb[i].isBound = 0;
     } else if (cloudOb[i].isBound == 2) {
-      b.move(0, 50, 0);
+      balloon.move(0, 50, 0);
       cloudOb[i].isBound = 0;
     } else if (cloudOb[i].isBound == 3) {
-      b.move(0, -50, 0);
+      balloon.move(0, -50, 0);
       cloudOb[i].isBound = 0;
     }
     if (heelOb[i].isHeel) {
-      b.airVolIn();
+      balloon.airVolIn();
       heelOb[i].isHeel = false;
     }
-  }
-  balloonGameOver();
-}
-
-void balloonGameOver() {
-  if (b.x - b.r/2 < 0) {
-    scene = 2;
-  }
-  if (b.r > rMax) {
-    image(img, b.x-b.r/2, b.y-b.r/2, 200, 200);
-    b.isOverHeel = true;
-    delayCount += 1;
-    if (delayCount == 60) {
-      scene = 2;
+    if (toriOb[i].isTori) {
+      gameover = true;
+      toriOb[i].isTori = false;
     }
   }
-  if((b.r-rMin)/(rMax-rMin) < 0){
+  if (scoreCount >= 1500 && g.x1 <= balloon.x + balloon.r/2) {  
+    scene = 3;
+  }
+  balloonGameMove();
+}
+
+void balloonGameMove() {
+  if (balloon.x - balloon.r/2 < 0) {
+    scene = 2;
+  }
+  if (balloon.r > rMax || gameover) {
+    image(img, balloon.x-balloon.r/2, balloon.y-balloon.r/2, 200, 200);
+    balloon.isOverHeel = true;
+    delayCount += 1;
+    if (delayCount == 60) {
+      delayCount = 0;
+      scene = 2;
+      gameover = false;
+    }
+  }
+
+  if ((balloon.r-rMin)/(rMax-rMin) < 0) {
     scene = 2;
   }
 }
 
 void InHPgage() {
-  h.update((b.r-rMin)/(rMax-rMin));
-  h.display();
+  hp.update((balloon.r-rMin)/(rMax-rMin));
+  hp.display();
 }
 
 void InHeel() {
   for (int i = 0; i < 5; i++) {
     heelOb[i].display();
     heelOb[i].move();
-    heelOb[i].isAtackJudge(b.x, b.y, b.r);
+    heelOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r);
   }
 }
 
@@ -122,35 +167,38 @@ void InCloud() {
   for (int i = 0; i < 5; i++) {
     cloudOb[i].display();
     cloudOb[i].update();
-    cloudOb[i].isAtackJudge(b.x, b.y, b.r);
+    cloudOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r);
+  }
+}
+
+void InTori() {
+  for (int i = 0; i < 5; i++) {
+    toriOb[i].display();
+    toriOb[i].update();
+    toriOb[i].isAtackJudge(balloon.x, balloon.y, balloon.r/2);
+  }
+}
+
+void InCount() {
+  text(scoreCount+"m", width*7/8, 100);  
+  if (scoreCount >= 1500) {  
+    g.display();
+  } else {  
+    scoreCount++;
   }
 }
 
 void keyPressed() {
   if (keyCode == UP) {
-    b.move(0, -10, 0);
+    balloon.move(0, -10, 0);
   }
   if (keyCode == DOWN) {
-    b.move(0, 10, 0);
-  }
-
-  if (key == 'r' && scene != 1) {
-    b = new Balloon(width/8, height/2, rMax);
-    h = new HP();
-    back = new Background();
-    for (int i = 0; i < 5; i++) {
-      heelOb[i] = new Heel(random(width/2, width*3/4)*(i+1), random(125, height-125),random(1,3));
-      cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 300), random(50, 300),random(1,3));
-    }
-    scene = 1;
-  }
-  if (key == 's' && scene == 1) {
-    scene = 4;
+    balloon.move(0, 10, 0);
   }
 }
 
 void keyReleased() {
   if (keyCode == RIGHT) {
-    b.move(100, 0, 50);
+    balloon.move(100, 0, 50);
   }
 }

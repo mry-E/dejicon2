@@ -17,17 +17,17 @@ class Balloon {
       stroke(0);
       line(x, y+sizeY, x, y+sizeY+r/2+25);
       noStroke();
-      fill(0, 0, 255);
+      fill(255, 0, 0);
       ellipse(x, y+sizeY, r, r);
       triangle(x, y+sizeY+r/2-10, x-10, y+sizeY+r/2+10, x+10, y+sizeY+r/2+10);
     }
   }
 
-  void update() {
+  void update(float rPercent) {
     if (!isOverHeel) {
       angle += 0.06;
       sizeY = sin(angle)*10;
-      if (r > maxR/2) {
+      if (rPercent > 0.5) {
         y -= sizeStepY;
       } else {
         y += sizeStepY;

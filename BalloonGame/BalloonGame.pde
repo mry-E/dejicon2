@@ -50,14 +50,17 @@ void callClass() {
   hp = new HP();
   back = new Background();
   g = new Goal();
-  float hpX = width*6/8;
+  float hpX = width*7/8;
   for (int i = 0;i < HPCnt; i++){
     heelOb[i] = new Heel(hpX, random(125, height-125), random(1, 3));
     hpX += width*3/8;
   }
   
-  for (int i = 0; i < ToriCnt; i++) {
+  for (int i = 0;i < CloudCnt;i++){
     cloudOb[i] = new Cloud(random(width/2, width*3/4)*(i+1), random(125, height-300), random(50, 200), random(50, 200), random(1, 3));
+  }
+  
+  for (int i = 0; i < ToriCnt; i++) {
     toriX = random(width/2, width*3/4)*(i+2);
     toriY = random(125, height-300);
     toriOb[i] = new Tori(toriX, toriY, toriX-40, toriY+20, toriX, toriY+40, random(1, 3));
@@ -129,12 +132,15 @@ void InBalloon() {
       balloon.move(0, -50, 0);
       cloudOb[i].isBound = 0;
     }
-    
+  }
+  
+  for(int i = 0;i < ToriCnt;i++){
     if (toriOb[i].isTori) {
       gameover = true;
       toriOb[i].isTori = false;
     }
   }
+  
   if (scoreCount >= 1500 && g.x1 <= balloon.x + balloon.r/2) {  
     scene = 3;
   }
@@ -210,6 +216,6 @@ void keyPressed() {
 
 void keyReleased() {
   if (keyCode == RIGHT && !balloon.isOverHeel) {
-    balloon.move(100, 0, 30);
+    balloon.move(100, 0, 20);
   }
 }
